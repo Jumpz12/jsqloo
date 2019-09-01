@@ -27,9 +27,59 @@ config.PORT = ""
 
 JSQLoo.connect = function()
 
-        jumpz_database = mysqloo.connect(config.HOSTNAME, config.USER, config.PASSWORD, config.DBNAME, config.PORT)
-        jumpz_database.onConnected = function(db) print("Connected to Database: " .. db) end
-        jumpz_database.onConnectionFailed = function(db, e) print("Could not connect to Database: " .. db .. "\n" .. e) end
-        jumpz_database:connect()
-        
+    jumpz_database = mysqloo.connect(config.HOSTNAME, config.USER, config.PASSWORD, config.DBNAME, config.PORT)
+    jumpz_database.onConnected = function(db) print("Connected to Database: " .. db) end
+    jumpz_database.onConnectionFailed = function(db, e) print("Could not connect to Database: " .. db .. "\n" .. e) end
+    jumpz_database:connect()
+
 end
+
+JSQLoo.create_table = function(tableName, fields) -- Use: https://www.w3schools.com/sql/sql_datatypes.asp for the datatypes
+
+    local string = ""
+    local counter = 1
+    for _, info in ipairs(fields) do
+        local comma = ""
+        if counter ~= #fields then
+            comma = ", "
+        end
+        string = string .. info.name .. " " .. string.upper(info.type) .. comma
+        counter = counter + 1
+    end
+    local create_table = jumpz_database:query("CREATE TABLE IF NOT EXISTS " .. tableName .. " (" .. string .. ")")
+    create_table.onSuccess = function() print("Table, " .. tableName .. " was created") end
+    create_table.onError = function(q, e) print("An error happened with query: " .. q .. "\n".. e) end
+    create_table:start()
+
+end
+
+--Example
+--[[
+    JSQLoo.create_table("spawnLocations", 
+{
+            {
+                name = "team_id",
+                type = "int"
+            },
+
+            {
+                name = "team_name",
+                type = "varchar"
+            },
+
+            {
+                name = "x",
+                type = "float"
+            },
+
+            {
+                name = "y",
+                type = "float"
+            },
+
+            {
+                name = "z",
+                type = "float"
+            }
+})
+]]
