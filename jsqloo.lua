@@ -74,3 +74,12 @@ end
 })
 ]]
 
+JSQLoo.query = function(query)
+
+    local run = jumpz_database  :query(query)
+    run.onSuccess = function() print("Query: " .. query .. " was successful") end
+    run.onError = function(q, e) print("An error happened with query: " .. q .. "\n".. e) end
+    run:start()
+    JSQLoo.data = run:getData()
+
+end
