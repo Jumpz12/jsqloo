@@ -5,3 +5,4 @@ Easily allows you to set up databases, tables and queries with easy to use funct
 # Todo List:
 - Add database linking/joining
 - Make better
+- Prepared queries?
